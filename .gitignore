@@ -1,0 +1,16 @@
+# Build output
+bin/
+obj/
+
+# SQLite database (generated at runtime)
+*.db
+*.db-shm
+*.db-wal
+
+# IDE and editor
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
