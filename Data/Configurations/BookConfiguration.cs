@@ -1,4 +1,4 @@
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

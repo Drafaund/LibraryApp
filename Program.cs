@@ -18,8 +18,10 @@ services.AddSingleton<AuthorMenu>();
 services.AddSingleton<BookMenu>();
 services.AddSingleton<MainMenu>();
 
-await using var provider = services.BuildServiceProvider();
+await using var provider = services.BuildServiceProvider(); //sifatnya singleton
 
+// Provider itu sifatnya singleton, tapi DbContext itu sifatnya scoped, 
+// jadi harus dibuat scope baru untuk setiap penggunaan DbContext.
 // Scope sendiri untuk startup, agar DbContext-nya dibuang setelah migrate dan seed selesai
 using (var scope = provider.CreateScope())
 {
@@ -31,7 +33,7 @@ using (var scope = provider.CreateScope())
 try
 {
     await provider.GetRequiredService<MainMenu>().RunAsync();
-    Console.WriteLine("Sampai jumpa.");
+    Console.WriteLine("Sampai jumpa."); 
 }
 catch (EndOfStreamException)
 {

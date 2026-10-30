@@ -1,4 +1,4 @@
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryApp.Data;
@@ -49,6 +49,7 @@ public static class DbSeeder
                 }
             });
 
-        await db.SaveChangesAsync();
+        await db.SaveChangesAsync(); //ini adalah eksekusi dari semua perubahan di atas ke database
+        //yang sebelumnya masih di memory RAM
     }
 }

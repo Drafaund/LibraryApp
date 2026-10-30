@@ -16,7 +16,7 @@ namespace LibraryApp.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.33");
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Author", b =>
+            modelBuilder.Entity("LibraryApp.Models.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,10 +29,10 @@ namespace LibraryApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Book", b =>
+            modelBuilder.Entity("LibraryApp.Models.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,10 +64,10 @@ namespace LibraryApp.Data.Migrations
                     b.HasIndex("Isbn")
                         .IsUnique();
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.BookAuthor", b =>
+            modelBuilder.Entity("LibraryApp.Models.BookAuthor", b =>
                 {
                     b.Property<int>("BookId")
                         .HasColumnType("INTEGER");
@@ -82,10 +82,10 @@ namespace LibraryApp.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("BookAuthors");
+                    b.ToTable("BookAuthors", (string)null);
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Category", b =>
+            modelBuilder.Entity("LibraryApp.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -101,12 +101,12 @@ namespace LibraryApp.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Book", b =>
+            modelBuilder.Entity("LibraryApp.Models.Book", b =>
                 {
-                    b.HasOne("LibraryApp.Domain.Entities.Category", "Category")
+                    b.HasOne("LibraryApp.Models.Category", "Category")
                         .WithMany("Books")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -115,15 +115,15 @@ namespace LibraryApp.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.BookAuthor", b =>
+            modelBuilder.Entity("LibraryApp.Models.BookAuthor", b =>
                 {
-                    b.HasOne("LibraryApp.Domain.Entities.Author", "Author")
+                    b.HasOne("LibraryApp.Models.Author", "Author")
                         .WithMany("BookAuthors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryApp.Domain.Entities.Book", "Book")
+                    b.HasOne("LibraryApp.Models.Book", "Book")
                         .WithMany("BookAuthors")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -134,17 +134,17 @@ namespace LibraryApp.Data.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Author", b =>
+            modelBuilder.Entity("LibraryApp.Models.Author", b =>
                 {
                     b.Navigation("BookAuthors");
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Book", b =>
+            modelBuilder.Entity("LibraryApp.Models.Book", b =>
                 {
                     b.Navigation("BookAuthors");
                 });
 
-            modelBuilder.Entity("LibraryApp.Domain.Entities.Category", b =>
+            modelBuilder.Entity("LibraryApp.Models.Category", b =>
                 {
                     b.Navigation("Books");
                 });

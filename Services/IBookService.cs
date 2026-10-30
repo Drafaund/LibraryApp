@@ -1,5 +1,5 @@
 using LibraryApp.Common;
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 
 namespace LibraryApp.Services;
 

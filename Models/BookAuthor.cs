@@ -1,4 +1,4 @@
-namespace LibraryApp.Domain.Entities;
+namespace LibraryApp.Models;
 
 //Entity pivot
 public class BookAuthor

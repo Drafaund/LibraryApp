@@ -1,6 +1,6 @@
 using LibraryApp.Common;
 using LibraryApp.Data;
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryApp.Services;

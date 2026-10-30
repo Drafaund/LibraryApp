@@ -95,7 +95,7 @@ erDiagram
 LibraryApp/
 ├─ Program.cs               Composition root: DI, migrate, seed, run the menu
 ├─ Common/Result.cs         Operation result (success/failure + message)
-├─ Domain/Entities/         Category, Author, Book, BookAuthor
+├─ Models/                  Entities: Category, Author, Book, BookAuthor
 ├─ Data/
 │  ├─ AppDbContext.cs
 │  ├─ DesignTimeDbContextFactory.cs
@@ -106,7 +106,7 @@ LibraryApp/
 └─ UI/                      All Console.WriteLine/ReadLine calls live here only
 ```
 
-Layering rules: `UI` only calls `Services`; `Services` never call `Console`; `Domain` does not depend on EF Core.
+Layering rules: `UI` only calls `Services`; `Services` never call `Console`; `Models` does not depend on EF Core.
 
 ## Migrations
 

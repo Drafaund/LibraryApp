@@ -1,4 +1,4 @@
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryApp.Data;
@@ -25,6 +25,9 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(builder);
         // Memuat otomatis semua class konfigurasi di Data/Configurations, jadi tidak perlu didaftarkan satu-satu
-        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        // Dia akan mencari semua class yang mengimplementasi IEntityTypeConfiguration<T> di assembly ini
+        // lalu memanggil Configure-nya
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly); 
+
     }
 }

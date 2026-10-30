@@ -1,4 +1,4 @@
-using LibraryApp.Domain.Entities;
+using LibraryApp.Models;
 using LibraryApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 
