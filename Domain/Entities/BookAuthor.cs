@@ -1,0 +1,13 @@
+namespace LibraryApp.Domain.Entities;
+
+//Entity pivot
+public class BookAuthor
+{
+    public int BookId { get; set; }
+    public Book Book { get; set; } = null!;
+
+    public int AuthorId { get; set; }
+    public Author Author { get; set; } = null!;
+
+    public bool IsPrimary { get; set; }
+}
