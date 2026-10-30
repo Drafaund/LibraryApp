@@ -1,65 +1,67 @@
 # LibraryApp
 
-LibraryApp adalah aplikasi console untuk mengelola data buku perpustakaan, dibuat dengan C# (.NET 8) dan EF Core (SQLite) sebagai tugas "Create CRUD Using EF Core". Aplikasi ini mendemonstrasikan operasi CRUD untuk Category, Author, dan Book, relasi one-to-many (Category–Book), relasi many-to-many dengan pivot eksplisit (Book–Author), serta migration.
+LibraryApp is a console application for managing a library's book data, built with C# (.NET 8) and EF Core (SQLite) as the "Create CRUD Using EF Core" assignment. It demonstrates CRUD operations for Category, Author, and Book, a one-to-many relationship (Category–Book), a many-to-many relationship with an explicit join entity (Book–Author), and migrations.
 
-## Teknologi
+## Tech stack
 
-- .NET 8 (C#, nullable reference types aktif)
-- EF Core 8 dengan provider SQLite
-- `Microsoft.Extensions.DependencyInjection` untuk dependency injection
+- .NET 8 (C#, nullable reference types enabled)
+- EF Core 8 with the SQLite provider
+- `Microsoft.Extensions.DependencyInjection` for dependency injection
 
-## Prasyarat
+## Prerequisites
 
-- [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0) (versi dikunci lewat `global.json`)
-- (Opsional, hanya untuk membuat migration baru) tool EF:
+- [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0) (the version is pinned via `global.json`)
+- (Optional, only needed to create new migrations) the EF tool:
   ```bash
   dotnet tool install --global dotnet-ef --version 8.*
   ```
 
-## Cara menjalankan
+## Getting started
 
-Jalankan dari folder root proyek (yang berisi `LibraryApp.csproj`):
+Run from the project root folder (the one containing `LibraryApp.csproj`):
 
 ```bash
 dotnet build
 dotnet run
 ```
 
-Saat pertama kali dijalankan, aplikasi otomatis:
+On first run, the application automatically:
 
-1. membuat database `library.db` di folder kerja,
-2. menerapkan semua migration (membuat tabel),
-3. mengisi data contoh bila database masih kosong (2 kategori, 3 penulis, 2 buku),
-4. menampilkan menu utama.
+1. creates the `library.db` database in the working directory,
+2. applies all migrations (creates the tables),
+3. seeds sample data if the database is empty (2 categories, 3 authors, 2 books),
+4. shows the main menu.
 
-Tidak ada login. Semua fitur langsung tersedia.
+There is no login. All features are available immediately.
 
-Untuk mengulang dari awal, hapus `library.db` (beserta `library.db-shm` dan `library.db-wal` bila ada), lalu jalankan `dotnet run` lagi.
+To start over, delete `library.db` (along with `library.db-shm` and `library.db-wal` if present) and run `dotnet run` again.
 
-## Fitur
+The menu text and messages shown to the user are in Indonesian.
 
-| Menu | Fitur |
-| ---- | ----- |
-| Kategori | Daftar, tambah, ubah, hapus |
-| Penulis | Daftar, tambah, ubah, hapus |
-| Buku | Daftar (tabel dengan kategori dan penulis), cari berdasarkan judul, detail, tambah, ubah, hapus |
+## Features
 
-Aturan yang diterapkan:
+| Menu | Features |
+| ---- | -------- |
+| Category (Kategori) | List, add, edit, delete |
+| Author (Penulis) | List, add, edit, delete |
+| Book (Buku) | List (table with category and authors), search by title, details, add, edit, delete |
 
-- Nama kategori unik (tanpa membedakan huruf besar/kecil); kategori yang masih punya buku tidak bisa dihapus.
-- Penulis yang masih dipakai buku tidak bisa dihapus.
-- ISBN unik; `Stock >= 0`; tahun terbit antara 1000 dan tahun sekarang.
-- Setiap buku punya satu kategori dan minimal satu penulis, dengan tepat satu penulis utama.
-- Mengubah buku dapat mengganti kategori dan penulisnya; menghapus buku ikut menghapus relasi penulisnya.
-- Input tidak valid (teks di kolom angka, kosong, di luar rentang) ditolak dengan pesan dan diminta ulang, tanpa membuat aplikasi berhenti.
+Rules enforced by the application:
 
-## Relasi data
+- Category names are unique (case-insensitive); a category that still has books cannot be deleted.
+- An author that is still linked to a book cannot be deleted.
+- ISBN is unique; `Stock >= 0`; the publication year must be between 1000 and the current year.
+- Every book has one category and at least one author, with exactly one primary author.
+- Editing a book can change its category and authors; deleting a book also removes its author links.
+- Invalid input (text in a numeric field, empty values, out-of-range numbers) is rejected with a message and asked again, without stopping the application.
+
+## Data model
 
 ```mermaid
 erDiagram
-    Categories ||--o{ Books : "punya banyak"
-    Books ||--o{ BookAuthors : "ditulis oleh"
-    Authors ||--o{ BookAuthors : "menulis"
+    Categories ||--o{ Books : "has many"
+    Books ||--o{ BookAuthors : "written by"
+    Authors ||--o{ BookAuthors : "writes"
 
     Categories {
         int Id PK
@@ -84,33 +86,33 @@ erDiagram
     }
 ```
 
-- **Category – Book (1:N):** `OnDelete(Restrict)`, kategori tidak bisa dihapus selama masih punya buku.
-- **Book – Author (N:M):** lewat pivot eksplisit `BookAuthors` dengan composite key `(BookId, AuthorId)` dan kolom tambahan `IsPrimary`. Relasi pivot memakai `Cascade`.
+- **Category – Book (1:N):** `OnDelete(Restrict)`, so a category cannot be deleted while it still has books.
+- **Book – Author (N:M):** through the explicit join entity `BookAuthors`, which has the composite key `(BookId, AuthorId)` and the extra column `IsPrimary`. The join rows use `Cascade` delete.
 
-## Struktur proyek
+## Project structure
 
 ```
 LibraryApp/
-├─ Program.cs               Composition root: DI, migrate, seed, jalankan menu
-├─ Common/Result.cs         Hasil operasi (sukses/gagal + pesan)
+├─ Program.cs               Composition root: DI, migrate, seed, run the menu
+├─ Common/Result.cs         Operation result (success/failure + message)
 ├─ Domain/Entities/         Category, Author, Book, BookAuthor
 ├─ Data/
 │  ├─ AppDbContext.cs
 │  ├─ DesignTimeDbContextFactory.cs
-│  ├─ Configurations/       Konfigurasi Fluent API per entity
+│  ├─ Configurations/       Fluent API configuration, one class per entity
 │  ├─ Migrations/
-│  └─ DbSeeder.cs           Data contoh (idempotent)
-├─ Services/                Logika bisnis dan validasi
-└─ UI/                      Semua Console.WriteLine/ReadLine hanya di sini
+│  └─ DbSeeder.cs           Sample data (idempotent)
+├─ Services/                Business logic and validation
+└─ UI/                      All Console.WriteLine/ReadLine calls live here only
 ```
 
-Aturan layering: `UI` hanya memanggil `Services`; `Services` tidak memanggil `Console`; `Domain` tidak bergantung pada EF Core.
+Layering rules: `UI` only calls `Services`; `Services` never call `Console`; `Domain` does not depend on EF Core.
 
-## Migration
+## Migrations
 
 ```bash
-dotnet ef migrations add <Nama> --output-dir Data/Migrations
+dotnet ef migrations add <Name> --output-dir Data/Migrations
 dotnet ef database update
 ```
 
-Aplikasi juga menerapkan migration otomatis saat startup, jadi `dotnet ef database update` tidak wajib dijalankan sebelum `dotnet run`.
+The application also applies migrations automatically at startup, so running `dotnet ef database update` before `dotnet run` is not required.
