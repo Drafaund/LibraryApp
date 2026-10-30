@@ -1,5 +1,6 @@
 ﻿using LibraryApp.Data;
 using LibraryApp.Services;
+using LibraryApp.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,12 @@ services.AddScoped<ICategoryService, CategoryService>();
 services.AddScoped<IAuthorService, AuthorService>();
 services.AddScoped<IBookService, BookService>();
 
+// Menu hanya menyimpan IServiceScopeFactory (tidak ada DbContext), jadi aman didaftarkan Singleton
+services.AddSingleton<CategoryMenu>();
+services.AddSingleton<AuthorMenu>();
+services.AddSingleton<BookMenu>();
+services.AddSingleton<MainMenu>();
+
 await using var provider = services.BuildServiceProvider();
 
 // Scope sendiri untuk startup, agar DbContext-nya dibuang setelah migrate dan seed selesai
@@ -21,4 +28,14 @@ using (var scope = provider.CreateScope())
     await DbSeeder.SeedAsync(db);
 }
 
-Console.WriteLine("Database siap.");
+try
+{
+    await provider.GetRequiredService<MainMenu>().RunAsync();
+    Console.WriteLine("Sampai jumpa.");
+}
+catch (EndOfStreamException)
+{
+    // Input ditutup (Ctrl+Z / pipe habis): keluar dengan rapi alih-alih menampilkan stack trace
+    Console.WriteLine();
+    Console.WriteLine("Input ditutup, aplikasi berhenti.");
+}
